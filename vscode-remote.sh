@@ -64,13 +64,13 @@ NODE=$(running_job_node)
 if [ -z "${NODE}" ]; then
     PORT=$(shuf -i 2000-65000 -n 1)
     /usr/bin/sbatch -J $JOB_NAME%$PORT $PARAM $SCRIPT_DIR/job.sh $PORT
-fi
 
-while [ -z "${NODE}" ]
-do
-    sleep 2
-    NODE=$(running_job_node)
-done
+    while [ -z "${NODE}" ]
+    do
+        sleep 2
+        NODE=$(running_job_node)
+    done
+fi
 
 echo "Connecting to $NODE"
 
