@@ -1,8 +1,13 @@
-JOB_NAME=gert-vscode
+#!/bin/bash
 
-#########
-JOB_NAME=${JOB_NAME//%/-}
+JOB_NAME=vscode-remote
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+
+if [ ! -z "$1" ] && [ $1 == "gpu" ]; then
+    PARAM="-q ng --gpus=1 -t 04:00:00 --mem=32G -c 8 -o none"
+else
+    PARAM="-q ni -t 12:00:00 --mem=32G -c 8 -o none"
+fi
 
 get_running_job(){
     list=($(ecsqueue --me --states=R -h -O JobId:" ",Name:" ",NodeList:" " | grep $JOB_NAME))
@@ -52,12 +57,6 @@ if [ ! -z "$1" ] && [ $1 == "list" ]; then
     output=$($squeue --me --states=R -O JobId,Partition,Name,User,State,TimeUsed,TimeLimit,NodeList | grep -E "JOBID|$JOB_NAME")
     echo "$output"
     exit 0
-fi
-
-if [ ! -z "$1" ] && [ $1 == "gpu" ]; then
-    PARAM="-q ng --gpus=1 -t 04:00:00 --mem=32G -c 8 -o none"
-else
-    PARAM="-q ni -t 12:00:00 --mem=32G -c 8 -o none"
 fi
 
 NODE=$(running_job_node)
