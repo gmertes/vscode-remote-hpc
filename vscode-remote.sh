@@ -54,11 +54,17 @@ if [ ! -z "$1" ] && [ $1 == "list" ]; then
     exit 0
 fi
 
+if [ ! -z "$1" ] && [ $1 == "gpu" ]; then
+    PARAM="-q ng --gpus=1 -t 04:00:00 --mem=32G -c 8 -o none"
+else
+    PARAM="-q ni -t 12:00:00 --mem=32G -c 8 -o none"
+fi
+
 NODE=$(running_job_node)
 
 if [ -z "${NODE}" ]; then
     PORT=$(shuf -i 2000-65000 -n 1)
-    /usr/bin/sbatch -J $JOB_NAME%$PORT $SCRIPT_DIR/cpu-job.sh $PORT
+    /usr/bin/sbatch -J $JOB_NAME%$PORT $PARAM $SCRIPT_DIR/job.sh $PORT
 fi
 
 while [ -z "${NODE}" ]
