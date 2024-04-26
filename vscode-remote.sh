@@ -51,7 +51,7 @@ if [ ! -z "$1" ] && [ $1 == "cancel" ]; then
 fi
 
 if [ ! -z "$1" ] && [ $1 == "list" ]; then
-    echo $(squeue --me --states=R -O JobId,Partition,Name,User,State,TimeUsed,TimeLimit,NodeList | grep -E "JOBID|$JOB_NAME")
+    echo "$(squeue --me --states=R -O JobId,Partition,Name,UserName,State,TimeUsed,TimeLimit,NodeList | grep -E "JOBID|$JOB_NAME")"
     exit 0
 fi
 
