@@ -4,9 +4,9 @@ JOB_NAME=vscode-remote
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 
 if [ ! -z "$1" ] && [ $1 == "gpu" ]; then
-    PARAM="-q ng --gpus=1 -t 04:00:00 --mem=32G -c 8 -o none"
+    SBATCH_PARAM="-q ng --gpus=1 -t 04:00:00 --mem=32G -c 16"
 else
-    PARAM="-q ni -t 12:00:00 --mem=32G -c 8 -o none"
+    SBATCH_PARAM="-q ni -t 12:00:00 --mem=32G -c 16"
 fi
 
 get_running_job(){
@@ -63,7 +63,7 @@ NODE=$(running_job_node)
 
 if [ -z "${NODE}" ]; then
     PORT=$(shuf -i 2000-65000 -n 1)
-    /usr/bin/sbatch -J $JOB_NAME%$PORT $PARAM $SCRIPT_DIR/job.sh $PORT
+    /usr/bin/sbatch -J $JOB_NAME%$PORT $SBATCH_PARAM -o none $SCRIPT_DIR/job.sh $PORT
 
     while [ -z "${NODE}" ]
     do
