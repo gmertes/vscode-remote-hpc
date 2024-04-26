@@ -48,6 +48,7 @@ if [ ! -z "$1" ] && [ $1 == "cancel" ]; then
     do
         echo Cancelling job $JOBID
         $scancel $JOBID
+        sleep 2
         JOBID=$(running_job_id)
     done
     exit 0
@@ -67,7 +68,7 @@ if [ -z "${NODE}" ]; then
 
     while [ -z "${NODE}" ]
     do
-        sleep 2
+        sleep 5
         NODE=$(running_job_node)
     done
 fi
