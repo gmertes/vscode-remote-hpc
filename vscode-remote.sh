@@ -12,23 +12,21 @@ fi
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 START=$(date +%s)
 
-get_running_job(){
+query_job(){
     list=($(squeue --me --states=R -h -O JobId:" ",Name:" ",NodeList:" " | grep $JOB_NAME))
-    echo ${list[$1]}
-}
+    if [ ! ${#list[@]} -eq 0 ]; then
+        JOB_ID=${list[0]}
+        JOB_FULLNAME=${list[1]}
+        JOB_NODE=${list[2]}
 
-running_job_id(){
-    echo $(get_running_job 0)
-}
-
-running_job_port(){
-    jobname=$(get_running_job 1)
-    split=(${jobname//%/ })
-    echo ${split[1]}
-}
-
-running_job_node(){
-    echo $(get_running_job 2)
+        split=(${JOB_FULLNAME//%/ })
+        JOB_PORT=${split[1]}
+    else
+        JOB_ID=""
+        JOB_FULLNAME=""
+        JOB_NODE=""
+        JOB_PORT=""
+    fi
 }
 
 timeout() {
@@ -39,13 +37,13 @@ timeout() {
 }
 
 if [ ! -z "$1" ] && [ $1 == "cancel" ]; then
-    JOBID=$(running_job_id)
-    while [ ! -z "${JOBID}" ]; do
-        echo Cancelling job $JOBID
-        scancel $JOBID
+    query_job
+    while [ ! -z "${JOB_ID}" ]; do
+        echo Cancelling job $JOB_ID
+        scancel $JOB_ID
         timeout
         sleep 2
-        JOBID=$(running_job_id)
+        query_job
     done
     exit 0
 fi
@@ -55,22 +53,22 @@ if [ ! -z "$1" ] && [ $1 == "list" ]; then
     exit 0
 fi
 
-NODE=$(running_job_node)
+query_job
 
-if [ -z "${NODE}" ]; then
+if [ -z "${JOB_NODE}" ]; then
     PORT=$(shuf -i 2000-65000 -n 1)
     /usr/bin/sbatch -J $JOB_NAME%$PORT $SBATCH_PARAM -o none $SCRIPT_DIR/job.sh $PORT
 
-    while [ -z "${NODE}" ]; do
+    while [ -z "${JOB_NODE}" ]; do
         timeout
         sleep 5
-        NODE=$(running_job_node)
+        query_job
     done
 fi
 
-echo "Connecting to $NODE"
+echo "Connecting to $JOB_NODE"
 
-while ! nc $NODE $(running_job_port); do 
+while ! nc $JOB_NODE $JOB_PORT; do 
     timeout
     sleep 1 
 done
