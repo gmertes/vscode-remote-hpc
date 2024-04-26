@@ -10,7 +10,7 @@ else
 fi
 
 get_running_job(){
-    list=($(ecsqueue --me --states=R -h -O JobId:" ",Name:" ",NodeList:" " | grep $JOB_NAME))
+    list=($(squeue --me --states=R -h -O JobId:" ",Name:" ",NodeList:" " | grep $JOB_NAME))
     echo ${list[$1]}
 }
 
@@ -28,26 +28,12 @@ running_job_node(){
     echo $(get_running_job 2)
 }
 
-if command -v ecscancel &> /dev/null
-then
-    scancel=ecscancel
-else
-    scancel=scancel
-fi
-
-if command -v ecsqueue &> /dev/null
-then
-    squeue=ecsqueue
-else
-    squeue=squeue
-fi
-
 if [ ! -z "$1" ] && [ $1 == "cancel" ]; then
     JOBID=$(running_job_id)
     while [ ! -z "${JOBID}" ]
     do
         echo Cancelling job $JOBID
-        $scancel $JOBID
+        scancel $JOBID
         sleep 2
         JOBID=$(running_job_id)
     done
@@ -55,7 +41,7 @@ if [ ! -z "$1" ] && [ $1 == "cancel" ]; then
 fi
 
 if [ ! -z "$1" ] && [ $1 == "list" ]; then
-    output=$($squeue --me --states=R -O JobId,Partition,Name,User,State,TimeUsed,TimeLimit,NodeList | grep -E "JOBID|$JOB_NAME")
+    output=$(squeue --me --states=R -O JobId,Partition,Name,User,State,TimeUsed,TimeLimit,NodeList | grep -E "JOBID|$JOB_NAME")
     echo "$output"
     exit 0
 fi
