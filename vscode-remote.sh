@@ -12,9 +12,10 @@ fi
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 START=$(date +%s)
 
-query_job(){
-    # only list states that can resolve to a running job
+query_slurm(){
+    # only list states that can result in a running job
     list=($(squeue --me --states=R,PD,S,CF,RF,RH,RQ -h -O JobId:" ",Name:" ",State:" ",NodeList:" " | grep $JOB_NAME))
+
     if [ ! ${#list[@]} -eq 0 ]; then
         echo ${list[@]}
         JOB_ID=${list[0]}
@@ -41,13 +42,13 @@ timeout() {
 }
 
 if [ ! -z "$1" ] && [ $1 == "cancel" ]; then
-    query_job
+    query_slurm
     while [ ! -z "${JOB_ID}" ]; do
         echo Cancelling job $JOB_ID
         scancel $JOB_ID
         timeout
         sleep 2
-        query_job
+        query_slurm
     done
     exit 0
 fi
@@ -57,7 +58,7 @@ if [ ! -z "$1" ] && [ $1 == "list" ]; then
     exit 0
 fi
 
-query_job
+query_slurm
 
 if [ -z "${JOB_STATE}" ]; then
     PORT=$(shuf -i 2000-65000 -n 1)
@@ -67,7 +68,7 @@ fi
 while [ ! "$JOB_STATE" == "RUNNING" ]; do
     timeout
     sleep 5
-    query_job
+    query_slurm
 done
 
 echo "Connecting to $JOB_NODE"
