@@ -4,8 +4,10 @@ JOB_NAME=vscode-remote
 TIMEOUT=300
 
 if [ ! -z "$1" ] && [ $1 == "gpu" ]; then
+    # GPU
     SBATCH_PARAM="-q ng --gpus=1 -t 04:00:00 --mem=32G -c 16"
 else
+    # CPU
     SBATCH_PARAM="-q ni -t 12:00:00 --mem=32G -c 16"
 fi
 
@@ -63,7 +65,7 @@ query_slurm
 
 if [ -z "${JOB_STATE}" ]; then
     PORT=$(shuf -i 2000-65000 -n 1)
-    >&2 /usr/bin/sbatch -J $JOB_NAME%$PORT $SBATCH_PARAM -o none $SCRIPT_DIR/job.sh $PORT
+    >&2 /usr/bin/sbatch -J $JOB_NAME%$PORT $SBATCH_PARAM $SCRIPT_DIR/job.sh $PORT
 fi
 
 while [ ! "$JOB_STATE" == "RUNNING" ]; do
