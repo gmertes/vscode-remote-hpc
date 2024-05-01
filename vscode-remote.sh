@@ -61,6 +61,17 @@ if [ ! -z "$1" ] && [ $1 == "list" ]; then
     exit 0
 fi
 
+if [ ! -z "$1" ] && [ $1 == "ssh" ]; then
+    query_slurm
+    if [ -z "${JOB_NODE}" ]; then
+        echo "No running job found"
+        exit 1
+    fi
+    echo "Connecting to $JOB_NODE via SSH"
+    ssh $JOB_NODE
+    exit 0
+fi
+
 query_slurm
 
 if [ -z "${JOB_STATE}" ]; then
