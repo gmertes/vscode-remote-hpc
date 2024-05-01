@@ -39,7 +39,11 @@ query_slurm(){
 
 timeout() {
     if (( $(date +%s)-START > TIMEOUT )); then 
-        echo "Timeout, exiting..."
+        >&2 echo "Timeout, exiting..."
+        if [ ! -z "${JOB_SUBMIT_ID}" ]; then
+            scancel $JOB_SUBMIT_ID
+            >&2 echo "Cancelled pending job $JOB_SUBMIT_ID"
+        fi
         exit 1
     fi
 }
