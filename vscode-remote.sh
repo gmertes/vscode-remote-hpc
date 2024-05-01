@@ -76,7 +76,9 @@ query_slurm
 
 if [ -z "${JOB_STATE}" ]; then
     PORT=$(shuf -i 2000-65000 -n 1)
-    >&2 /usr/bin/sbatch -J $JOB_NAME%$PORT $SBATCH_PARAM $SCRIPT_DIR/job.sh $PORT
+    list=($(/usr/bin/sbatch -J $JOB_NAME%$PORT $SBATCH_PARAM $SCRIPT_DIR/job.sh $PORT))
+    JOB_SUBMIT_ID=${list[3]}
+    echo "Submitted new $JOB_NAME job (id: $JOB_SUBMIT_ID)"
 fi
 
 while [ ! "$JOB_STATE" == "RUNNING" ]; do
