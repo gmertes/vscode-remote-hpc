@@ -82,7 +82,7 @@ if [ -z "${JOB_STATE}" ]; then
     PORT=$(shuf -i 2000-65000 -n 1)
     list=($(/usr/bin/sbatch -J $JOB_NAME%$PORT $SBATCH_PARAM $SCRIPT_DIR/job.sh $PORT))
     JOB_SUBMIT_ID=${list[3]}
-    echo "Submitted new $JOB_NAME job (id: $JOB_SUBMIT_ID)"
+    >&2 echo "Submitted new $JOB_NAME job (id: $JOB_SUBMIT_ID)"
 fi
 
 while [ ! "$JOB_STATE" == "RUNNING" ]; do
@@ -93,7 +93,9 @@ done
 
 >&2 echo "Connecting to $JOB_NODE"
 
-while ! nc $JOB_NODE $JOB_PORT; do 
+while ! nc -z $JOB_NODE $JOB_PORT; do 
     timeout
     sleep 1 
 done
+
+nc $JOB_NODE $JOB_PORT
