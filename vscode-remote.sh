@@ -5,10 +5,10 @@ TIMEOUT=300
 
 if [ ! -z "$1" ] && [ $1 == "gpu" ]; then
     # GPU
-    SBATCH_PARAM="-q ng --gpus=1 -t 04:00:00 --mem=32G -c 16"
+    SBATCH_PARAM="-q ng --gpus=1 -t 04:00:00 --mem=32G -c 8"
 else
     # CPU
-    SBATCH_PARAM="-q ni -t 12:00:00 --mem=32G -c 16"
+    SBATCH_PARAM="-q ni -t 12:00:00 --mem=32G -c 8"
 fi
 
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )

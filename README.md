@@ -8,14 +8,13 @@ A one-click script to setup and connect vscode to a Slurm-based HPC compute node
 
 ## Setup
 
-Git clone the repo on the HPC (replace `HPC-LOGIN` with your own) and make the `vscode-remote.sh` script executable. Also create an alias to easily execute the script.
+Git clone the repo on the HPC (replace `HPC-LOGIN` with your own) and run the installer.
 
 ```shell
 ssh HPC-LOGIN
-cd ~
 git clone git@github.com:gmertes/vscode-remote-hpc.git
-chmod +x ~/vscode-remote-hpc/vscode-remote.sh
-echo 'alias vscode-remote="~/vscode-remote-hpc/vscode-remote.sh"' >> ~/.bashrc
+cd vscode-remote-hpc
+bash install.sh
 ```
 
 On your local machine, generate a new ssh key for vscode-remote:
@@ -42,7 +41,7 @@ Add the following entry to your local machine's `~/.ssh/config`. Change `USERNAM
 Host vscode-remote
     User USERNAME
     IdentityFile ~/.ssh/vscode-remote
-    ProxyCommand ssh HPC-LOGIN "~/vscode-remote-hpc/vscode-remote.sh"
+    ProxyCommand ssh HPC-LOGIN "bash --login -c 'vscode-remote'"
     StrictHostKeyChecking no
 ```
 
