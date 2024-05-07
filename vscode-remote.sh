@@ -62,13 +62,17 @@ function query_slurm () {
     fi
 }
 
+function cleanup () {
+    if [ ! -z "${JOB_SUBMIT_ID}" ]; then
+        scancel $JOB_SUBMIT_ID
+        >&2 echo "Cancelled pending job $JOB_SUBMIT_ID"
+    fi
+}
+
 function timeout () {
     if (( $(date +%s)-START > TIMEOUT )); then 
         >&2 echo "Timeout, exiting..."
-        if [ ! -z "${JOB_SUBMIT_ID}" ]; then
-            scancel $JOB_SUBMIT_ID
-            >&2 echo "Cancelled pending job $JOB_SUBMIT_ID"
-        fi
+        cleanup
         exit 1
     fi
 }
@@ -129,6 +133,7 @@ if [ ! -z "$1" ]; then
     JOB_NAME=vscode-remote
     SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
     START=$(date +%s)
+    trap "cleanup && exit 1" INT TERM
     case $1 in
         list)   list ;;
         cancel) cancel ;;
