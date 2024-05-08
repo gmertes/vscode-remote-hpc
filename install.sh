@@ -31,7 +31,7 @@ fi
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 
 cp $SCRIPT_DIR/vscode-remote.sh $INSTALL_DIR/vscode-remote
-cp $SCRIPT_DIR/job.sh $INSTALL_DIR
+cp $SCRIPT_DIR/vscode-remote-job.sh $INSTALL_DIR
 chmod +x $INSTALL_DIR/vscode-remote
 
 echo "  + vscode-remote installed in $INSTALL_DIR"
