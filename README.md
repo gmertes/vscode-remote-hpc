@@ -9,7 +9,7 @@ A one-click script to setup and connect vscode to a Slurm-based HPC compute node
 ## Requirements
 - `sshd` must be available on the compute node, installed in `/usr/sbin` or available in the PATH
 - A typical `sshd` installation is required, it must read login keys from `~/.ssh/authorized_keys` 
-- You must be allowed to run `sshd` in a batch job on an arbitrary port above 2000, and connect to it from the login node
+- You must be allowed to run `sshd` in a batch job on an arbitrary port above 10000, and connect to it from the login node
 - The `nc` command (netcat) must be available on the HPC login node
 - Names of Slurm nodes must resolve to their internal IP addresses
 - You must have SSH access to the HPC login node
@@ -18,7 +18,7 @@ These requirements are usually met, except if explicitly changed or forbidden by
 
 ## Setup
 
-Git clone the repo on the HPC (replace `HPC-LOGIN` with your own) and run the installer. 
+Git clone the repo on the HPC login node (replace `HPC-LOGIN` with your own) and run the installer. 
 
 ```shell
 ssh HPC-LOGIN

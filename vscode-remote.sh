@@ -107,7 +107,7 @@ function connect () {
     query_slurm
 
     if [ -z "${JOB_STATE}" ]; then
-        PORT=$(shuf -i 2000-65000 -n 1)
+        PORT=$(shuf -i 10000-65000 -n 1)
         list=($(/usr/bin/sbatch -J $JOB_NAME%$PORT $SBATCH_PARAM $SCRIPT_DIR/vscode-remote-job.sh $PORT))
         JOB_SUBMIT_ID=${list[3]}
         >&2 echo "Submitted new $JOB_NAME job (id: $JOB_SUBMIT_ID)"
