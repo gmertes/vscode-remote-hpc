@@ -18,8 +18,8 @@ function usage ()
     echo "Usage :  $0 [command]
 
     General commands:
-    list      List running vscode-remote job
-    cancel    Cancels running vscode-remote job
+    list      List running vscode-remote jobs
+    cancel    Cancels running vscode-remote jobs
     ssh       SSH into the node of a running job
     help      Display this message
 
@@ -27,7 +27,7 @@ function usage ()
     cpu       Connect to a CPU node
     gpu       Connect to a GPU node
 
-    You should not manually call the script with 'cpu' or 'gpu' commands.
+    You should _NOT_ manually call the script with 'cpu' or 'gpu' commands.
     They should be used in the ProxyCommand in your ~/.ssh/config file, for example:
         Host vscode-remote-cpu
             User USERNAME
@@ -35,7 +35,7 @@ function usage ()
             ProxyCommand ssh HPC-LOGIN \"bash --login -c 'vscode-remote cpu'\"
             StrictHostKeyChecking no  
 
-    You can only have one job type at a time (cpu or gpu). If you want to switch job types, you have to first run 'cancel'.
+    You can have a CPU and GPU job running at the same time, just add them as separate hosts in your config.
     "
 } 
 
