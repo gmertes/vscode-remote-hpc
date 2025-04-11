@@ -59,7 +59,7 @@ Add the following entry to your local machine's `~/.ssh/config`. Change `USERNAM
 Host vscode-remote-cpu
     User USERNAME
     IdentityFile ~/.ssh/vscode-remote
-    ProxyCommand ssh HPC-LOGIN "bash --login -c 'vscode-remote cpu'"
+    ProxyCommand ssh HPC-LOGIN "~/bin/vscode-remote cpu"
     StrictHostKeyChecking no
 ```
 
@@ -78,7 +78,7 @@ You can have one CPU and one GPU job running at the same time, just add a new en
 Host vscode-remote-gpu
     User USERNAME
     IdentityFile ~/.ssh/vscode-remote
-    ProxyCommand ssh HPC-LOGIN "bash --login -c 'vscode-remote gpu'"
+    ProxyCommand ssh HPC-LOGIN "~/bin/vscode-remote gpu"
     StrictHostKeyChecking no
 ```
 
@@ -90,8 +90,8 @@ $ vscode-remote help
 Usage :  ~/bin/vscode-remote [command]
 
     General commands:
-    list      List running vscode-remote job
-    cancel    Cancels running vscode-remote job
+    list      List running vscode-remote jobs
+    cancel    Cancels running vscode-remote jobs
     ssh       SSH into the node of a running job
     help      Display this message
 ```

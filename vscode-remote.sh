@@ -32,7 +32,7 @@ function usage ()
         Host vscode-remote-cpu
             User USERNAME
             IdentityFile ~/.ssh/vscode-remote
-            ProxyCommand ssh HPC-LOGIN \"bash --login -c 'vscode-remote cpu'\"
+            ProxyCommand ssh HPC-LOGIN \"~/bin/vscode-remote cpu\"
             StrictHostKeyChecking no  
 
     You can have a CPU and GPU job running at the same time, just add them as separate hosts in your config.
