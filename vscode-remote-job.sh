@@ -17,4 +17,9 @@ else
     sshd_cmd=sshd
 fi
 
-$sshd_cmd -D -p $1 -f /dev/null -h ${HOME:-~}/.ssh/vscode-remote-hostkey
+$sshd_cmd -D -p $1 -f /dev/null -h ${HOME:-~}/.ssh/vscode-remote-hostkey \
+    -o AuthorizedKeysFile=${HOME:-~}/.ssh/authorized_keys \
+    -o StrictModes=no \
+    -o PubkeyAuthentication=yes \
+    -o PasswordAuthentication=no \
+    -o UsePAM=no
