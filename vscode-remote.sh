@@ -18,10 +18,11 @@ function usage ()
     echo "Usage :  $0 [command]
 
     General commands:
-    list | status     List running vscode-remote jobs
-    cancel            Cancels running vscode-remote jobs
-    ssh               SSH into the node of a running job
-    help              Display this message
+    list | status       List running vscode-remote jobs
+    cancel              Cancels running vscode-remote jobs
+    ssh                 SSH into the node of a running job
+    alloc cpu | gpu     Allocates a new CPU or GPU job (without connecting to it)
+    help                Display this message
 
     Job commands (see usage below):
     cpu       Connect to a CPU node
@@ -138,7 +139,7 @@ function ssh_connect () {
     ssh -p $PORT $NODE
 }
 
-function connect () {
+function alloc () {
     query_slurm
 
     if [ -z "${JOB_STATE}" ]; then
@@ -147,6 +148,10 @@ function connect () {
         JOB_SUBMIT_ID=${list[3]}
         >&2 echo "Submitted new $JOB_NAME job (id: $JOB_SUBMIT_ID)"
     fi
+}
+
+function connect () {
+    alloc
 
     while [ ! "$JOB_STATE" == "RUNNING" ]; do
         timeout
@@ -174,6 +179,13 @@ if [ ! -z "$1" ]; then
         status) list ;;
         cancel) cancel ;;
         ssh)    ssh_connect ;;
+        alloc)  case "$2" in
+                    cpu) SBATCH_PARAM=$SBATCH_PARAM_CPU ;;
+                    gpu) SBATCH_PARAM=$SBATCH_PARAM_GPU ;;
+                    *)   echo "Invalid option for alloc command, use 'cpu' or 'gpu'"; exit 1 ;;
+                esac
+                JOB_NAME=$JOB_NAME-$2
+                alloc ;;
         cpu)    JOB_NAME=$JOB_NAME-cpu; SBATCH_PARAM=$SBATCH_PARAM_CPU; connect ;;
         gpu)    JOB_NAME=$JOB_NAME-gpu; SBATCH_PARAM=$SBATCH_PARAM_GPU; connect ;;
         help)   usage ;;
