@@ -18,10 +18,10 @@ function usage ()
     echo "Usage :  $0 [command]
 
     General commands:
-    list      List running vscode-remote jobs
-    cancel    Cancels running vscode-remote jobs
-    ssh       SSH into the node of a running job
-    help      Display this message
+    list | status     List running vscode-remote jobs
+    cancel            Cancels running vscode-remote jobs
+    ssh               SSH into the node of a running job
+    help              Display this message
 
     Job commands (see usage below):
     cpu       Connect to a CPU node
@@ -171,6 +171,7 @@ if [ ! -z "$1" ]; then
     trap "cleanup && exit 1" INT TERM
     case $1 in
         list)   list ;;
+        status) list ;;
         cancel) cancel ;;
         ssh)    ssh_connect ;;
         cpu)    JOB_NAME=$JOB_NAME-cpu; SBATCH_PARAM=$SBATCH_PARAM_CPU; connect ;;
