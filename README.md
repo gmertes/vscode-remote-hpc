@@ -1,13 +1,15 @@
 # vscode-remote-hpc
 
-A one-click script to setup and connect vscode to a Slurm-based HPC compute node, directly from the VS Code remote explorer. 
+A one-click script to connect VS Code to a Slurm-based HPC compute node, directly from the VS Code remote explorer. 
 
 ## Features
-This script is designed to be used with the [Remote - SSH](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-ssh) extension for Visual Studio Code. 
+This script is designed to be used with the [Remote - SSH](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-ssh) extension for Visual Studio Code.
 
-- Automatically starts a batch job, or reuses an existing one, for vscode to connect to.
+- The script sits as a host in your local `~/.ssh/config` and is called when you connect to it from the VS Code remote explorer.
+- Upon connecting from the VS Code remote explorer, the script launches a batch job on the HPC. VS Code waits for the job to start before connecting, giving you a session directly on a compute node.
+- Running jobs are reused between different VS Code sessions. You can open multiple remote windows and they will all share the same running job.
 - No need to manually execute the script on the HPC, just connect from the remote explorer and the script handles everything automagically through `ProxyCommand`.
-- Support for two different job types: CPU and GPU
+- Support for two different job types: CPU and GPU.
 
 ## Requirements
 - `sshd` must be available on the compute node, installed in `/usr/sbin` or available in the PATH
@@ -90,8 +92,8 @@ $ vscode-remote help
 Usage :  ~/bin/vscode-remote [command]
 
     General commands:
-    list      List running vscode-remote jobs
-    cancel    Cancels running vscode-remote jobs
-    ssh       SSH into the node of a running job
-    help      Display this message
+    list | status     List running vscode-remote jobs
+    cancel            Cancels running vscode-remote jobs
+    ssh               SSH into the node of a running job
+    help              Display this message
 ```
