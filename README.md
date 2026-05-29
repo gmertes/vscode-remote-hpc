@@ -92,8 +92,9 @@ $ vscode-remote help
 Usage :  ~/bin/vscode-remote [command]
 
     General commands:
-    list | status     List running vscode-remote jobs
-    cancel            Cancels running vscode-remote jobs
-    ssh               SSH into the node of a running job
-    help              Display this message
+    list | status       List running vscode-remote jobs
+    cancel              Cancels running vscode-remote jobs
+    ssh                 SSH into the node of a running job
+    alloc cpu | gpu     Allocates a new CPU or GPU job (without connecting to it)
+    help                Display this message
 ```
