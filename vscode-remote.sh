@@ -19,8 +19,8 @@ function usage ()
 
     General commands:
     list | status       List running vscode-remote jobs
-    cancel              Cancels running vscode-remote jobs
-    ssh                 SSH into the node of a running job
+    cancel [cpu | gpu]  Cancels running vscode-remote jobs. If 'cpu' or 'gpu' is specified, only cancels the corresponding job, otherwise cancels all jobs.
+    ssh                 SSH into the node of a running job. If multiple jobs are running, you will be prompted to choose which one to connect to.
     alloc cpu | gpu     Allocates a new CPU or GPU job (without connecting to it)
     help                Display this message
 
@@ -177,7 +177,13 @@ if [ ! -z "$1" ]; then
     case $1 in
         list)   list ;;
         status) list ;;
-        cancel) cancel ;;
+        cancel) case "$2" in
+                    cpu) JOB_NAME=$JOB_NAME-cpu ;;
+                    gpu) JOB_NAME=$JOB_NAME-gpu ;;
+                    "")  ;;
+                    *)   echo "Invalid option for cancel command, use 'cpu', 'gpu' or leave empty to cancel all"; exit 1 ;;
+                esac
+                cancel ;;
         ssh)    ssh_connect ;;
         alloc)  case "$2" in
                     cpu) SBATCH_PARAM=$SBATCH_PARAM_CPU ;;

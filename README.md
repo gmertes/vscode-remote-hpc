@@ -93,8 +93,8 @@ Usage :  ~/bin/vscode-remote [command]
 
     General commands:
     list | status       List running vscode-remote jobs
-    cancel              Cancels running vscode-remote jobs
-    ssh                 SSH into the node of a running job
+    cancel [cpu | gpu]  Cancels running vscode-remote jobs. If 'cpu' or 'gpu' is specified, only cancels the corresponding job, otherwise cancels all jobs.
+    ssh                 SSH into the node of a running job. If multiple jobs are running, you will be prompted to choose which one to connect to.
     alloc cpu | gpu     Allocates a new CPU or GPU job (without connecting to it)
     help                Display this message
 ```
