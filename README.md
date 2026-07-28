@@ -32,7 +32,7 @@ The scripts will be installed in `~/.vscode-remote-htcondor`
 
 ## Usage
 
-After you have installed the scripts, and if you followed the instructions, you should be able to connect to a compute node directly from the VS Code remote explorer, by connecting to the special host you've created. If no job is running, the scripts will automatically queue a job and connect to it as soon as it starts running. If a job is already running, it will connect to it directly.
+After you have installed the scripts, and if you followed the instructions, you should be able to submit a job (similar to an interactive session) to a compute node directly from the VS Code remote explorer, by connecting to the special host you've created (the scripts will automatically queue a job and connect to it as soon as it starts running). If a job has already been submitted and is running, it will not create a new job but connect to the existing one directly.
 
 ## How it works
 
@@ -40,7 +40,9 @@ Instead of connecting to the head/login node of the cluster and running the vsco
 
 The scripts work by tweaking the SSH configuration for the special host you created. Instead of directly connecting to the remote host, it will run the `vscode-remote` script on the login node. This script will make sure that there is a job running and connect to it.
 
-The `vscode-remote` script will check if a job is already running, and if not, it will submit a new job to the cluster. There are some options to customize the job submission, for example to request a specific number of CPUs or amount of memory.
+The `vscode-remote` script will check if a job is already running, and if not, it will submit a new job to the cluster. 
+
+For clarification: *Job* and *connection* are different concepts. Usually, you can see how many *jobs* you are running in the cluster using `condor_q`. However, in this setup, you can have at maximum one job running. With `condor_q` you will see this job as `VSCODE_REMOTE_HT-` (followed by a number). If you *connect* more than one VSC window to the cluster using this setup, all of them will connect to the existing job. For this reason, even when you have more than one VSC window *connected*, you will see only one *job* with `condor_q`.
 
 ### Running a special job on the cluster (once)
 
